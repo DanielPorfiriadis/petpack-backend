@@ -1,0 +1,9 @@
+{
+  "name": "petpack-backend",
+  "version": "0.0.0",
+  "description": "petpack-backend",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  }
+}
