@@ -1,8 +1,28 @@
-'use strict';
-var http = require('http');
-var port = process.env.PORT || 1337;
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-http.createServer(function (req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello World\n');
-}).listen(port);
+const app = express();
+
+var corsOptions = {
+    origin: "http://localhost:8081"
+};
+
+app.use(cors(corsOptions));
+
+// parse requests of content-type - application/json
+app.use(bodyParser.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// simple route
+app.get("/", (req, res) => {
+    res.json({ message: "Use POST MAN for testing." });
+});
+
+// set port, listen for requests
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}.`);
+});
