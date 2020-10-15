@@ -1,28 +1,28 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+require('dotenv').config();
+require('./models/UserData');
 
-const app = express();
 
-var corsOptions = {
-    origin: "http://localhost:8081"
-};
+const mongoose = require('mongoose');
 
-app.use(cors(corsOptions));
+const app = require('./app');
 
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// simple route
-app.get("/", (req, res) => {
-    res.json({ message: "Use POST MAN for testing." });
+const server = app.listen(1337, () => {
+    console.log(`Express is running on port ${server.address().port}`);
 });
 
-// set port, listen for requests
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
+mongoose.connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 });
+
+mongoose.connection
+    .on('open', () => {
+        console.log('Mongoose Connected');
+    })
+    .on('error', (err) => {
+        console.log(`Connection error: ${err.message}`);
+    });
+
+
+

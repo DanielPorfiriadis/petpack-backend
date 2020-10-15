@@ -28,6 +28,12 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="app.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="models\UserData.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="routes\index.js">
       <SubType>Code</SubType>
     </Content>
@@ -38,6 +44,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="models\" />
     <Folder Include="routes\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
