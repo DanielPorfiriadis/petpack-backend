@@ -17,10 +17,7 @@ router.get('/register', (req, res) => {
 
 
 router.post('/register', (req, res) => {
-    const userData = new UserData({
-        name: req.query.name,
-        email: req.query.email
-    });
+    const userData = new UserData(req.body);
     userData.save().then(() => { res.redirect('/'); });
 
 })
