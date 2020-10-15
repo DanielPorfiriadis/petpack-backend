@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 const UserData = mongoose.model('UserData');
 const PetData = mongoose.model('PetData');
-var BCRYPT_SALT_ROUNDS = 4;
+const BCRYPT_SALT_ROUNDS = 4;
 router.get('/', (req, res) => {
     res.send('test  slash ok');
 });
@@ -28,19 +28,11 @@ router.post('/register', (req, res) => {
             userData.userName = req.body.userName;
             userData.firstName = req.body.firstName;
             userData.lastName = req.body.fastName;
-            var password = req.body.password;
-            bcrypt.hash(password, BCRYPT_SALT_ROUNDS)
-                .then(function (hashedPassword) {
-                    //res.send('Hash ok');
-                    console.log(hashedPassword);
-                    password = hashedPassword;
-                })
 
-                .catch(function (error) {
-                    console.log("Error hashing ");
-                    console.log(error);
-                });
-            userData.password = password;
+            password = req.body.password;
+            const salt = bcrypt.genSaltSync(4);
+            const hash = bcrypt.hashSync(password, salt);
+            userData.password = hash;
             userData.email = req.body.email;
             userData.birthDate = req.body.birthDate;
             petData.petName = req.body.petName;
