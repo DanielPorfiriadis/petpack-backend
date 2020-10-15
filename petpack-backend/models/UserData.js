@@ -1,11 +1,23 @@
 const mongoose = require('mongoose');
 
 const userDataSchema = new mongoose.Schema({
-    name: {
+    UserName: {
         type: String,
     },
-    email: {
+    FirstName: {
         type: String,
+    },
+    LastName: {
+        type: String,
+    },
+    Password: {
+        type: String,
+    },
+    Email: {
+        type: String,
+    },
+    BirthDate: {
+        type: Date,//date format: YYYY-MM-DD
     },
 
 });

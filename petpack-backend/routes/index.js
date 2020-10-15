@@ -16,12 +16,20 @@ router.get('/register', (req, res) => {
 router.post('/register', (req, res) => {
     const userData = new UserData();
     const petData = new PetData();
-    userData.name = req.body.name;
-    userData.email = req.body.email;
-    petData.petName = req.body.pet_name;
+    userData.UserName = req.body.UserName;
+    userData.FirstName = req.body.FirstName;
+    userData.LastName = req.body.LastName;
+    userData.Password = req.body.Password;
+    userData.Email = req.body.Email;
+    userData.BirthDate = req.body.BirthDate;
+    petData.petName = req.body.petName;
     petData.petOwner = userData.id;
+    petData.petSex = req.body.petSex;
+    petData.petSpecies = req.body.petSpecies;
     petData.save();
     userData.save().then(() => { res.redirect('/'); });
+
+    
 })
 
 module.exports = router;
