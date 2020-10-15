@@ -1,5 +1,6 @@
 require('dotenv').config();
 require('./models/UserData');
+require('./models/PetData');
 
 
 const mongoose = require('mongoose');
@@ -23,6 +24,3 @@ mongoose.connection
     .on('error', (err) => {
         console.log(`Connection error: ${err.message}`);
     });
-
-
-

@@ -31,6 +31,9 @@
     <Content Include="app.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="models\PetData.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="models\UserData.js">
       <SubType>Code</SubType>
     </Content>
