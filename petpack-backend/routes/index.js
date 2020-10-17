@@ -9,17 +9,21 @@ router.get('/', (req, res) => {
     res.send('test  slash ok');
 });
 
-router.get('/register', (req, res) => {
+/*router.get('/register', (req, res) => {
     res.send('test register ok');
-});
+});*/
 
-router.post('/register', (req, res) => {
+
+
+module.exports = router;
+
+/*router.post('/register', (req, res) => {
     const userData = new UserData();
 
-    /*    const tempData = new UserData();
+    *//*    const tempData = new UserData();
         tempData = UserData.find({
             userName: req.body.userName
-        }).catch();*/
+        }).catch();*//*
 
     UserData.exists({ name: req.body.userName }, function (err, doc) {
         if (doc==false) {
@@ -41,8 +45,8 @@ router.post('/register', (req, res) => {
             res.send('user exists already');
             console.log("User already exists");
         }
-    });
-
+    });*/
+/*
 
 
 
@@ -51,5 +55,4 @@ router.post('/register', (req, res) => {
 
 
 })
-
-module.exports = router;
+*/

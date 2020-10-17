@@ -42,6 +42,12 @@
     </Content>
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="routes\PetData.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="routes\UserData.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="server.js">
       <SubType>Code</SubType>
     </Content>
