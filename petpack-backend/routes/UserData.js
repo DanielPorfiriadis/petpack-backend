@@ -29,4 +29,33 @@ router.post('/register/user', (req, res) => {
 
 })
 
+/*
+
+app.get('/find/user', function (req, res) {
+    const userData = new UserData();
+
+    UserData.find({ userName: req.body.userName }, function (err, userData) {
+
+        res.send(userData);
+        
+
+    }); 
+
+    
+})
+
+app.get('/find/user', function (req, res) {
+    const userData = new UserData();
+
+    UserData.find({ firstName: req.body.firstName } , { lastName: req.body.lastName } , function (err, userData) {
+
+        res.send(userData);
+
+
+    });
+
+
+})
+*/
+
 module.exports = router;
