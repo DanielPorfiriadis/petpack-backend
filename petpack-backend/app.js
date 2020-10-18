@@ -8,7 +8,7 @@ const app = express();
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
+//Below are the route classes we want to run
 app.use('/', routesIndex);
 app.use('/', routesUserData);
 app.use('/', routesPetData);
