@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
 const UserData = mongoose.model('UserData');
 const bcrypt = require('bcrypt');
-
+const userData = new UserData();
 exports.login_user = function (req, res) {
     const givenUsername = req.body.userName;
     const givenPassword = req.body.password;
 
     //Retrieve User data from database
     UserData.findOne({ userName: givenUsername }, function (err, userData) { });
-    if (err) {
+/*    if (err) {
         //TODO: Here we need to implement appropiate error respond
         res.send("login error");
-    }
-    if (!userData) {
+    }*/
+/*    if (!userData) {
         //TODO: Here we need to implement appropiate error respond
         res.send("incorrect username!");
-    }
+    }*/
     //check if the hashed password if same with given password
     bcrypt.compare(givenPassword, userData.password, function (err, isMatch) {
         if (err) {
@@ -32,7 +32,7 @@ exports.login_user = function (req, res) {
 }
 
 exports.register_user = function (req, res) {
-    const userData = new UserData();
+   
     //check if user credentials are already in database
     //TODO: We have to check if user's email exist in database
     UserData.exists({ name: req.body.userName }, function (err, exists) {

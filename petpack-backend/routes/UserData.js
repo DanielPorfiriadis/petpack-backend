@@ -7,6 +7,6 @@ var userController = require('../controllers/UserDataController');
 router.post('/register/user', userController.register_user);
 
 //Login Endpoint
-router.post('/login', (req, res), userController.login_user);
+router.post('/login', userController.login_user);
 
 module.exports = router;
