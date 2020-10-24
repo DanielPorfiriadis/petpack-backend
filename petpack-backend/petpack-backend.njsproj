@@ -31,6 +31,15 @@
     <Content Include="app.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="controllers\PetDataController.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="controllers\UserDataController.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="models\Login.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="models\PetData.js">
       <SubType>Code</SubType>
     </Content>
@@ -54,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />
+    <Folder Include="controllers\" />
     <Folder Include="routes\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />

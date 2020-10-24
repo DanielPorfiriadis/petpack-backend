@@ -1,32 +1,12 @@
+//This class is going to have all the endpoints needed for the User's information
 const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
 const router = express.Router();
-const UserData = mongoose.model('UserData');
+var userController = require('../controllers/UserDataController');
 
-router.post('/register/user', (req, res) => {
-    const userData = new UserData();
+router.post('/register/user', userController.register_user);
 
-    UserData.exists({ name: req.body.userName }, function (err, doc) {
-        if (doc == false) {
-            userData.userName = req.body.userName;
-            userData.firstName = req.body.firstName;
-            userData.lastName = req.body.fastName;
-            var password = req.body.password;
-            const salt = bcrypt.genSaltSync(12);
-            const hash = bcrypt.hashSync(password, salt);
-            userData.password = hash;
-            userData.email = req.body.email;
-            userData.birthDate = req.body.birthDate;
-            userData.save().then(() => { res.redirect('/'); });
-        }
-        else {
-            res.send('user exists already');
-            console.log("User already exists");
-        }
-    });
-
-})
+//Login Endpoint
+router.post('/login', userController.login_user);
 
 module.exports = router;

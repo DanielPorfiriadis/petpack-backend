@@ -17,7 +17,7 @@ const userDataSchema = new mongoose.Schema({
         type: String,
     },
     birthDate: {
-        type: Date,//date format: YYYY-MM-DD
+        type: Date,//In order to insert correct date format enter: YYYY-MM-DD
     },
 
 });
