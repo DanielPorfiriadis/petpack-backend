@@ -1,36 +1,51 @@
 const mongoose = require('mongoose');
 const UserData = mongoose.model('UserData');
+require('dotenv').config();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { request } = require('../app');
 const userData = new UserData();
+
+
 
 exports.login_user = function (req, res) {
 
 
     const givenUsername = req.body.userName;
     const givenPassword = req.body.password;
-
+    const secret = 'swsh23hjddnns';
     //Retrieve User data from database
     UserData.findOne({ userName: givenUsername }, function (err, userData) { 
         if (err) {
             //TODO: Here we need to implement appropiate error respond
-            res.send("login error");
+            res.status(400).send("login error");
         }
         if (!userData) {
             //TODO: Here we need to implement appropiate error respond
-            res.send("incorrect username!");
+            res.status(400).send("incorrect username!");
         }
         else {
             //check if the hashed password if same with given password
             bcrypt.compare(givenPassword, userData.password, function (bcryptErr, isMatch) {
                 if (bcryptErr) {
                     //TODO: Here we need to implement appropiate error respond
-                    res.send("login error");
+                    res.status(400).send("login error");
                 } else if (!isMatch) {
                     //TODO: Here we need to implement appropiate error respond
-                    res.send("Password doesn't match!");
+                    res.status(400).send("Password doesn't match!");
                 } else {
                     //TODO: Here we need to implement appropiate error respond
-                    res.send("Password matches!");
+                    let payload = { userName: givenUsername }
+
+                    let accessToken = jwt.sign(payload, secret, {
+                        algorithm: "HS256",
+                        expiresIn: 120
+                    })
+                    userData.accessToken = accessToken;
+                    userData.save();
+                    res.cookie("jwt", accessToken, { secure: true, httpOnly: true })
+                    console.log(accessToken);
+                    res.send();
                 }
             });
         }
@@ -47,12 +62,13 @@ exports.register_user = function (req, res) {
             userData.userName = req.body.userName;
             userData.firstName = req.body.firstName;
             userData.lastName = req.body.lastName;
-            var password = req.body.password;
-            const salt = bcrypt.genSaltSync(12);//set encryption strength
-            const hash = bcrypt.hashSync(password, salt);//encrypt password
-            userData.password = hash;
             userData.email = req.body.email;
             userData.birthDate = req.body.birthDate;
+            userData.accessToken = '';
+
+            var password = req.body.password;
+            userData.setPassword(password);
+
             userData.save().then(() => { res.redirect('/'); });
         }
         else {
@@ -63,14 +79,20 @@ exports.register_user = function (req, res) {
     });
 }
 
-/*
-//We will need this function later in order to retrieve data in front end
-app.get('/find/user', function (req, res) {
-    const userData = new UserData();
+/*exports.retrieve_user_info = function (req, res) {
 
     UserData.find({ userName: req.body.userName }, function (err, userData) {
 
         res.send(userData);
     });
-})
+
+
+}
+
+exports.change_user_info = function (req, res) {
+
+    UserData.find({ userName: req.body.userName }, function (err, userData)){
+        //alter userData attributes
+    });
+}
 */

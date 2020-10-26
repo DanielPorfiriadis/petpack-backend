@@ -37,9 +37,6 @@
     <Content Include="controllers\UserDataController.js">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="models\Login.js">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="models\PetData.js">
       <SubType>Code</SubType>
     </Content>
