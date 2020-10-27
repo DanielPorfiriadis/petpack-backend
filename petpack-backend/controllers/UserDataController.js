@@ -43,7 +43,7 @@ exports.login_user = function (req, res) {
                     })
                     userData.accessToken = accessToken;
                     userData.save();
-                    res.cookie("jwt", accessToken, { secure: true, httpOnly: true })
+                    res.cookie("jwt", accessToken, { secure: false, httpOnly: false })
                     console.log(accessToken);
                     res.send();
                 }
