@@ -4,7 +4,7 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { request } = require('../app');
-const userData = new UserData();
+
 
 
 
@@ -41,11 +41,14 @@ exports.login_user = function (req, res) {
                         algorithm: "HS256",
                         expiresIn: 120
                     })
+                    const body = {
+                        userId: userData.id,
+                        jwt: accessToken,
+                        status: 200,
+                    };
                     userData.accessToken = accessToken;
-                    userData.save();
-                    res.cookie("jwt", accessToken, { secure: false, httpOnly: false })
-                    console.log(accessToken);
-                    res.send();
+                    userData.save().then(() => { res.status(200).send(body); });
+                   
                 }
             });
         }
@@ -58,7 +61,8 @@ exports.register_user = function (req, res) {
     //check if user credentials are already in database
     //TODO: We have to check if user's email exist in database
     UserData.exists({ userName: req.body.userName }, function (err, exists) {
-        if (exists == false ) {
+        if (exists == false) {
+            const userData = UserData();
             userData.userName = req.body.userName;
             userData.firstName = req.body.firstName;
             userData.lastName = req.body.lastName;
@@ -69,11 +73,12 @@ exports.register_user = function (req, res) {
             var password = req.body.password;
             userData.setPassword(password);
 
-            userData.save().then(() => { res.redirect('/'); });
+            userData.save().then(() => { res.status(200).send('done'); });
+            
         }
         else {
             //TODO: Send appropiate respond message 
-            res.send('user exists already');
+            res.status(400).send('user exists already');
             console.log("User already exists");
         }
     });
