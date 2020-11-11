@@ -1,26 +1,70 @@
-require('dotenv').config();
-require('./models/UserData');
-require('./models/PetData');
-
-
+const app = require("./app");
+const debug = require("debug")("node-angular");
+const http = require("http");
 const mongoose = require('mongoose');
 
-const app = require('./app');
+    //Ensures port is valid
+const normalizePort = val => {
+  var port = parseInt(val, 10);
 
+  if (isNaN(port)) {
+    // named pipe 
+    return val;
+  }
 
-const server = app.listen(1337, () => {
-    console.log(`Express is running on port ${server.address().port}`);
-});
+  if (port >= 0) {
+    // port number
+    return port;
+  }
 
-mongoose.connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+  return false;
+};
+
+//Check what error occured
+const onError = error => {
+  if (error.syscall !== "listen") {
+    throw error;
+  }
+  const bind = typeof port === "string" ? "pipe " + port : "port " + port;
+  switch (error.code) {
+    case "EACCES":
+      console.error(bind + " requires elevated privileges");
+      process.exit(1);
+      break;
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+};
+
+//Consoles log the port
+const onListening = () => {
+  const addr = server.address();
+  const bind = typeof port === "string" ? "pipe " + port : "port " + port;
+  debug("Listening on " + bind);
+};
+
+const port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);
+
+const server = http.createServer(app);
+server.on("error", onError);
+server.on("listening", onListening);
+server.listen(port);
+
+//Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/petpackDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 mongoose.connection
-    .on('open', () => {
-        console.log('Mongoose Connected');
-    })
-    .on('error', (err) => {
-        console.log(`Connection error: ${err.message}`);
-    });
+  .on('open', () => {
+      console.log('Mongoose Connected');
+  })
+  .on('error', (err) => {
+      console.log(`Connection error: ${err.message}`);
+  });

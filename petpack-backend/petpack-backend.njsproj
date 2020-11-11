@@ -37,7 +37,19 @@
     <Content Include="controllers\UserDataController.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="models\CommentFeed.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="models\Comment.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="models\PetData.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="models\Post.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="models\PostFeed.js">
       <SubType>Code</SubType>
     </Content>
     <Content Include="models\UserData.js">

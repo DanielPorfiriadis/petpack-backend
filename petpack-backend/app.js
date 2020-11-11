@@ -1,19 +1,30 @@
 const express = require('express');
-const routesIndex = require('./routes/index');
-const routesUserData = require('./routes/UserData');
-const routesPetData = require('./routes/PetData');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser')
+const path = require("path");
+
+const postsRoutes = require("./routes/posts");
+const userRoutes = require("./routes/user");
+
+
 const app = express();
 
-app.use(cookieParser())
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
 
-app.use(bodyParser.urlencoded({ extended: true }));
+    res.setHeader("Access-Control-Allow-Headers",
+     "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+
+     res.setHeader("Access-Control-Allow-Methods", 
+      "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+
+    next();
+});
+
 app.use(bodyParser.json());
-//Below are the route classes we want to run
-app.use('/', routesIndex);
-app.use('/', routesUserData);
-app.use('/', routesPetData);
 
+app.use("/images", express.static(path.join("backend/images")));
+
+app.use("/api/posts", postsRoutes);
+app.use("/api/user", userRoutes);
 
 module.exports = app;
