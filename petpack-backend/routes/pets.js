@@ -2,7 +2,7 @@
 const express = require('express');
 
 const router = express.Router();
-var petController = require('../controllers/PetDataController');
+var petController = require('../controllers/pet');
 
 //create Pet in database // /owner/:ownerId
 router.post('/register/pet/:ownerId', petController.add_pet);
