@@ -27,19 +27,19 @@ const storage = multer.diskStorage({
     }
 });
 
-router.post("",multer({storage: storage}).single("image"),(req, res, next) => {
-    const url = req.protocol + '://' + req.get("host");
-    const post = new Post({
+router.post("",/*den xreiazete*/multer({storage: storage}).single("image"),/*den xreiazete*/(req, res, next) => {
+   /*den xreiazete*/ const url = req.protocol + '://' + req.get("host");
+    const post = new Post({// dimiourgoume to adikeimeno pou theloume na apothikefsoume
         //timeStamp: Date.now,
         content: req.body.content,
         imagePath: url + "/images/" + req.file.filename,
         creator: req.userData.userId
     });
-    post.save().then(createdPost =>{
-        res.status(201).json({
+    post.save()./*me to then eketeloyme entoli  molis ginei i proigoumeni energia stin prokimeni .save()*/then(/*created Post einai i timi pou epistrefei to save*/createdPost =>{
+        /*here we return the respons*/res.status(201).json(/*we create a json which has a message part and a post par*/{
             message: 'Post added successfuly!',
             post: {
-                ...createdPost,
+                ...createdPost,/*with the 3 dots we ensure that the value is transfered correctly*/
                 id: createdPost._id
             }
         });
@@ -50,10 +50,10 @@ router.put("/:id",
     multer({storage: storage}).single("image"), 
     (req, res, next) => {
         let imagePath = req.body.imagePath;
-        if(req.file) {
+        /*den xreiazete*/if(req.file) {
             const url = req.protocol + '://' + req.get("host");
             imagePath = url + "/images/" + req.file.filename
-        }
+        }/*den xreiazete*/
         const post = new Post({
             _id: req.body.id,
             title: req.body.title,
@@ -62,8 +62,8 @@ router.put("/:id",
             creator: req.userData.userId
         });
         
-        Post.updateOne({_id: req.params.id, creator: req.userData.userId }, post).then(result => {
-            if (result.nModified>0){
+        Post.updateOne(/*with update one we need to enter one identifier in this case _id*/{_id: req.params.id, creator: req.userData.userId }, post).then(result => {
+            if (result.nModified>0/*nModified is the counter of changes that were created with the updateOne method*/){
                 res.status(200).json({message: "Update successful"});
             } else {
                 res.status(401).json({message: "Not authorized"});
@@ -73,11 +73,11 @@ router.put("/:id",
 })
 
 router.get("", (req, res, next )=> {
-    const pageSize = +req.query.pagesize;
-    const currentPage = +req.query.page;
+    /*den xreiazete*/const pageSize = +req.query.pagesize;
+    /*den xreiazete*/const currentPage = +req.query.page;
     const postQuery = Post.find();
     let fetchedPosts;
-    if (pageSize && currentPage) {
+    /*den xreiazete*/if (pageSize && currentPage) {
         postQuery
             .skip(pageSize * (currentPage - 1))
             .limit(pageSize);
