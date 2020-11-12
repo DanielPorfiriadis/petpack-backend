@@ -1,46 +1,24 @@
 const express = require('express')
 const router = express.Router();
-const multer = require('multer');
 const checkAuth =require("../middleware/check-auth");
 
-const Post = require('../models/post');
+const Comment = require('../models/comment');
 
-const MIME_TYPE_MAP = {
-    'image/png': 'png',
-    'image/jpeg': 'jpg',
-    'image/jpg': 'jpg'
-}
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const isValid = MIME_TYPE_MAP[file.mimetype];
-        let error = new Error("Invalid mime type");
-        if (isValid){
-            error = null;
-        }
-        cb(error, "backend/images");
-    },
-    filename: (req, file, cb) => {
-        const name = file.originalname.toLowerCase().split(' ').join('-');
-        const ext = MIME_TYPE_MAP[file.mimetype];
-        cb(null, name+ '-' + Date.now() + '.' + ext);
-    }
-});
-
-router.post("",multer({storage: storage}).single("image"),(req, res, next) => {
+router.post("",(req, res, next) => {
     const url = req.protocol + '://' + req.get("host");
-    const post = new Post({
+    const comment = new Comment,({
         //timeStamp: Date.now,
         content: req.body.content,
-        imagePath: url + "/images/" + req.file.filename,
+        postId: req.body.postId,
         creator: req.userData.userId
     });
-    post.save().then(createdPost =>{
+    post.save().then(createdComment =>{
         res.status(201).json({
-            message: 'Post added successfuly!',
+            message: 'Comment added successfuly!',
             post: {
-                ...createdPost,
-                id: createdPost._id
+                ...createdComment,
+                id: createdComment._id
             }
         });
     });

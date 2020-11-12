@@ -4,7 +4,7 @@ const commentSchema = new mongoose.Schema({
     content: {
         type: String,
     },
-    userId: {
+    creator: {
         type: String,
     },
     timestamp: {
