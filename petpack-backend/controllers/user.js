@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UserData = mongoose.model('UserData');
+const User = mongoose.model('User');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -15,7 +15,7 @@ exports.login_user = function (req, res) {
     const givenPassword = req.body.password;
     const secret = 'swsh23hjddnns';
     //Retrieve User data from database
-    UserData.findOne({ userName: givenUsername }, function (err, userData) { 
+    User.findOne({ userName: givenUsername }, function (err, userData) { 
         if (err) {
             //TODO: Here we need to implement appropiate error respond
             res.status(400).send("login error");
@@ -43,6 +43,7 @@ exports.login_user = function (req, res) {
                     })
                     const body = {
                         userId: userData.id,
+                        userName: userData.userName,
                         jwt: accessToken,
                         status: 200,
                     };
@@ -60,9 +61,9 @@ exports.register_user = function (req, res) {
    
     //check if user credentials are already in database
     //TODO: We have to check if user's email exist in database
-    UserData.exists({ userName: req.body.userName }, function (err, exists) {
+    User.exists({ userName: req.body.userName }, function (err, exists) {
         if (exists == false) {
-            const userData = UserData();
+            const userData = User();
             userData.userName = req.body.userName;
             userData.firstName = req.body.firstName;
             userData.lastName = req.body.lastName;

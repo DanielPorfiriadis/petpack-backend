@@ -9,6 +9,7 @@ router.post("/signup", (req, res, next) => {
     bcrypt.hash(req.body.password, 10).then(hash => {
         const user = new User({
             userName: req.body.userName,
+            email: req.body.email,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             password: hash
@@ -29,7 +30,7 @@ router.post("/signup", (req, res, next) => {
 
 router.post("/login", (req, res, next) => {
     let fetchedUser
-    User.findOne({email: req.body.email})
+    User.findOne({userName: req.body.userName})
         .then(user => {
             if (!user){
                 return res.status(401).json({
@@ -45,14 +46,15 @@ router.post("/login", (req, res, next) => {
                     message: "Auth failed"
                 });
             }
-            const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id},
+            const token = jwt.sign({userName: fetchedUser.userName, userId: fetchedUser._id},
                  'ithastobelonger',
                  { expiresIn: "1h" }
             );
             res.status(200).json({
                 token: token,
                 expiresIn: 3600,
-                userId: fetchedUser._id
+                userId: fetchedUser._id,
+                userName: fetchedUser.userName
             });
         })
         .catch(err => {

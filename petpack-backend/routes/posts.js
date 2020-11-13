@@ -27,13 +27,14 @@ const storage = multer.diskStorage({
     }
 });
 
-router.post("",/*den xreiazete*/multer({storage: storage}).single("image"),/*den xreiazete*/(req, res, next) => {
+router.post("", checkAuth,multer({storage: storage}).single("image"),/*den xreiazete*/(req, res, next) => {
    /*den xreiazete*/ const url = req.protocol + '://' + req.get("host");
     const post = new Post({// dimiourgoume to adikeimeno pou theloume na apothikefsoume
         //timeStamp: Date.now,
         content: req.body.content,
         imagePath: url + "/images/" + req.file.filename,
-        creator: req.userData.userId
+        creator: req.userData.userId,
+        creatorUsername: req.userData.userName,
     });
     post.save()./*me to then eketeloyme entoli  molis ginei i proigoumeni energia stin prokimeni .save()*/then(/*created Post einai i timi pou epistrefei to save*/createdPost =>{
         /*here we return the respons*/res.status(201).json(/*we create a json which has a message part and a post par*/{
@@ -46,7 +47,7 @@ router.post("",/*den xreiazete*/multer({storage: storage}).single("image"),/*den
     });
 });
 
-router.put("/:id",
+router.put("/:id", checkAuth,
     multer({storage: storage}).single("image"), 
     (req, res, next) => {
         let imagePath = req.body.imagePath;
@@ -59,11 +60,12 @@ router.put("/:id",
             title: req.body.title,
             content: req.body.content,
             imagePath: imagePath,
-            creator: req.userData.userId
+            creator: req.userData.userId,
+            creatorUsername: req.userData.userName
         });
         
-        Post.updateOne(/*with update one we need to enter one identifier in this case _id*/{_id: req.params.id, creator: req.userData.userId }, post).then(result => {
-            if (result.nModified>0/*nModified is the counter of changes that were created with the updateOne method*/){
+        Post.updateOne({_id: req.params.id, creator: req.userData.userId }, post).then(result => {
+            if (result.nModified>0){
                 res.status(200).json({message: "Update successful"});
             } else {
                 res.status(401).json({message: "Not authorized"});
