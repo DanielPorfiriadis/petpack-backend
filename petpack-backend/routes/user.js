@@ -5,6 +5,27 @@ const jwt = require('jsonwebtoken');
 
 const User = require("../models/user");
 
+router.get("/retrieve", (req, res, next) => {
+    User.find().select('userName').then(fetchedUserNames => {
+        console.log(fetchedUserNames);
+        let usernameArray =[];
+        fetchedUserNames.forEach(element => {
+            usernameArray.push(element.userName);
+        });
+        console.log(usernameArray);
+        res.status(201).json({
+            message: 'Users fetched',
+            usernameArray: usernameArray
+        });
+    })
+    .catch(err => {
+        res.status(500).json({
+            err: err
+        });
+    });
+})
+
+
 router.post("/signup", (req, res, next) => {
     bcrypt.hash(req.body.password, 10).then(hash => {
         const user = new User({

@@ -5,9 +5,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { request } = require('../app');
 
-
-
-
 exports.login_user = function (req, res) {
 
 
@@ -56,49 +53,3 @@ exports.login_user = function (req, res) {
     });
 
 }
-
-exports.register_user = function (req, res) {
-   
-    //check if user credentials are already in database
-    //TODO: We have to check if user's email exist in database
-    User.exists({ userName: req.body.userName }, function (err, exists) {
-        if (exists == false) {
-            const userData = User();
-            userData.userName = req.body.userName;
-            userData.firstName = req.body.firstName;
-            userData.lastName = req.body.lastName;
-            userData.email = req.body.email;
-            userData.birthDate = req.body.birthDate;
-            userData.accessToken = '';
-
-            var password = req.body.password;
-            userData.setPassword(password);
-
-            userData.save().then(() => { res.status(200).send('done'); });
-            
-        }
-        else {
-            //TODO: Send appropiate respond message 
-            res.status(400).send('user exists already');
-            console.log("User already exists");
-        }
-    });
-}
-
-/*exports.retrieve_user_info = function (req, res) {
-
-    UserData.find({ userName: req.body.userName }, function (err, userData) {
-
-        res.send(userData);
-    });
-
-
-}
-
-exports.change_user_info = function (req, res) {
-
-    UserData.find({ userName: req.body.userName }, function (err, userData)){
-        //alter userData attributes
-    });
-}
-*/

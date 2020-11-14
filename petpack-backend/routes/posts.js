@@ -4,6 +4,7 @@ const multer = require('multer');
 const checkAuth =require("../middleware/check-auth");
 
 const Post = require('../models/post');
+const { route } = require('./user');
 
 const MIME_TYPE_MAP = {
     'image/png': 'png',
@@ -27,10 +28,10 @@ const storage = multer.diskStorage({
     }
 });
 
-router.post("", checkAuth,multer({storage: storage}).single("image"),/*den xreiazete*/(req, res, next) => {
-   /*den xreiazete*/ const url = req.protocol + '://' + req.get("host");
+router.post("", checkAuth,multer({storage: storage}).single("image"),(req, res, next) => {
+    const url = req.protocol + '://' + req.get("host");
     const post = new Post({// dimiourgoume to adikeimeno pou theloume na apothikefsoume
-        //timeStamp: Date.now,
+        //timeStamp: Date.now(),
         content: req.body.content,
         imagePath: url + "/images/" + req.file.filename,
         creator: req.userData.userId,
@@ -46,6 +47,7 @@ router.post("", checkAuth,multer({storage: storage}).single("image"),/*den xreia
         });
     });
 });
+
 
 router.put("/:id", checkAuth,
     multer({storage: storage}).single("image"), 
@@ -74,6 +76,8 @@ router.put("/:id", checkAuth,
     });
 })
 
+
+
 router.get("", (req, res, next )=> {
     /*den xreiazete*/const pageSize = +req.query.pagesize;
     /*den xreiazete*/const currentPage = +req.query.page;
@@ -96,6 +100,11 @@ router.get("", (req, res, next )=> {
         });
     });
 });
+
+router.get("/users/:id", (req, res , next) => {
+    
+})
+
 
 router.get("/:id", (req, res, next) => {
     Post.findById(req.params.id).then(post => {
