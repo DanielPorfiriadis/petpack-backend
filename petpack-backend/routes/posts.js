@@ -30,18 +30,19 @@ const storage = multer.diskStorage({
 
 router.post("", checkAuth,multer({storage: storage}).single("image"),(req, res, next) => {
     const url = req.protocol + '://' + req.get("host");
-    const post = new Post({// dimiourgoume to adikeimeno pou theloume na apothikefsoume
-        //timeStamp: Date.now(),
+    timestampC = Date.now().toString();
+    const post = new Post({
+        timeStamp: Date.now(),
         content: req.body.content,
         imagePath: url + "/images/" + req.file.filename,
         creator: req.userData.userId,
         creatorUsername: req.userData.userName,
     });
-    post.save()./*me to then eketeloyme entoli  molis ginei i proigoumeni energia stin prokimeni .save()*/then(/*created Post einai i timi pou epistrefei to save*/createdPost =>{
-        /*here we return the respons*/res.status(201).json(/*we create a json which has a message part and a post par*/{
+    post.save().then(createdPost =>{
+       res.status(201).json({
             message: 'Post added successfuly!',
             post: {
-                ...createdPost,/*with the 3 dots we ensure that the value is transfered correctly*/
+                ...createdPost,
                 id: createdPost._id
             }
         });
@@ -63,7 +64,7 @@ router.put("/:id", checkAuth,
             content: req.body.content,
             imagePath: imagePath,
             creator: req.userData.userId,
-            creatorUsername: req.userData.userName
+            creatorUsername: req.userData.userName,
         });
         
         Post.updateOne({_id: req.params.id, creator: req.userData.userId }, post).then(result => {
@@ -81,7 +82,7 @@ router.put("/:id", checkAuth,
 router.get("", (req, res, next )=> {
     /*den xreiazete*/const pageSize = +req.query.pagesize;
     /*den xreiazete*/const currentPage = +req.query.page;
-    const postQuery = Post.find();
+    const postQuery = Post.find().sort({timeStamp :-1});
     let fetchedPosts;
     /*den xreiazete*/if (pageSize && currentPage) {
         postQuery
@@ -116,10 +117,9 @@ router.get("/:id", (req, res, next) => {
     });
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", checkAuth, (req, res, next) => {
     Post.deleteOne({_id: req.params.id, creator: req.userData.userId}).then(results => {
-
-        if (result.n >0){
+        if (results.n >0){
             res.status(200).json({message: "Deletion successful"});
         } else {
             res.status(401).json({message: "Not authorized"});
