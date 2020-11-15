@@ -80,11 +80,11 @@ router.put("/:id", checkAuth,
 
 
 router.get("", (req, res, next )=> {
-    /*den xreiazete*/const pageSize = +req.query.pagesize;
-    /*den xreiazete*/const currentPage = +req.query.page;
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
     const postQuery = Post.find().sort({timeStamp :-1});
     let fetchedPosts;
-    /*den xreiazete*/if (pageSize && currentPage) {
+    if (pageSize && currentPage) {
         postQuery
             .skip(pageSize * (currentPage - 1))
             .limit(pageSize);
@@ -102,8 +102,28 @@ router.get("", (req, res, next )=> {
     });
 });
 
-router.get("/users/:id", (req, res , next) => {
-    
+router.get("/users", (req, res , next) => {
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const username = req.query.username;
+    const postQuery = Post.find({creatorUsername: username}).sort({timeStamp :-1});
+    let fetchedPosts;
+    if (pageSize && currentPage) {
+        postQuery
+            .skip(pageSize * (currentPage - 1))
+            .limit(pageSize);
+    }
+    postQuery
+        .then(documents =>{
+            fetchedPosts =documents;
+            return Post.countDocuments();
+        }).then(count => { 
+            res.status(200).json({
+                message: 'Posts fetched succesfully',
+                posts: fetchedPosts,
+                maxPosts: count
+        });
+    });
 })
 
 
