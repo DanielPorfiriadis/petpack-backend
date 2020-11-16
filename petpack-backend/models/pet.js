@@ -4,13 +4,13 @@ const petDataSchema = new mongoose.Schema({
     petName: {
         type: String,
     },
-    petOwner: {
+    ownerUsername: {
         type: String,
     },
-    petSex: {
+    gender: {
         type: String,
     },
-    petSpecies: {
+    species: {
         type: String,
     },
 
