@@ -5,7 +5,27 @@ const router = express.Router();
 var petController = require('../controllers/pet');
 
 //create Pet in database // /owner/:ownerId
-router.post('/add/:ownerUsername', petController.add_pet());
+router.post('/add/:ownerUsername',(req, res, next) => {
+    const pet = new Pet({
+        petName: req.body.petName,
+        gender: req.body.gender,
+        species: req.body.species,
+        ownerUsername: req.params.ownerUsername,
+    });
+    console.log(pet);
+    pet.save().then(result =>{
+        res.status(201).json({
+            message: 'Pet saved',
+            result: result
+        });
+    })
+    .catch(err => {
+        res.status(500).json({
+            err:err
+        });
+    });
+    
+});
 
 router.get('/get/:ownerUsername', (req, res, next) => {
     let fetchedPets
