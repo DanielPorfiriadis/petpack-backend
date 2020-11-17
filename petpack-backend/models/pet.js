@@ -13,6 +13,6 @@ const petDataSchema = new mongoose.Schema({
     species: {
         type: String,
     },
-
 });
+
 module.exports = mongoose.model('PetData', petDataSchema);

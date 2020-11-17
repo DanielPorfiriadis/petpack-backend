@@ -39,7 +39,7 @@ router.get("/:id", (req, res, next)=> {
 });
 
 
-router.get("/retrieve", (req, res, next) => {
+router.get("", (req, res, next) => {
     User.find().select('userName').then(fetchedUserNames => {
         console.log(fetchedUserNames);
         let usernameArray =[];

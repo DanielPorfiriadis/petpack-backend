@@ -28,13 +28,19 @@ const storage = multer.diskStorage({
     }
 });
 
-router.post("", checkAuth,multer({storage: storage}).single("image"),(req, res, next) => {
-    const url = req.protocol + '://' + req.get("host");
+router.post("", checkAuth, multer({storage: storage}).single("image"), (req, res, next) => {
+    
+    var imagePathString ='';
+    if(req.file!=null){
+        const url = req.protocol + '://' + req.get("host");
+        imagePathString = url + "/images/" + req.file.filename
+    }
+    console.log(req.body.image);
     timestampC = Date.now().toString();
     const post = new Post({
         timeStamp: Date.now(),
         content: req.body.content,
-        imagePath: url + "/images/" + req.file.filename,
+        imagePath: imagePathString,
         creator: req.userData.userId,
         creatorUsername: req.userData.userName,
     });
