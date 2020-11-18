@@ -35,10 +35,10 @@ router.post("", checkAuth, multer({storage: storage}).single("image"), (req, res
         const url = req.protocol + '://' + req.get("host");
         imagePathString = url + "/images/" + req.file.filename
     }
-    console.log(req.body.image);
-    timestampC = Date.now().toString();
+
+    console.log(req.body.timeStamp);
     const post = new Post({
-        timeStamp: Date.now(),
+        timeStamp: req.body.timeStamp,
         content: req.body.content,
         imagePath: imagePathString,
         creator: req.userData.userId,
