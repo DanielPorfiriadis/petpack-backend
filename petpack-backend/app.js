@@ -8,7 +8,6 @@ const commentRoutes = require("./routes/comments");
 const petRoutes = require("./routes/pet");
 
 
-
 const app = express();
 
 app.use((req, res, next) => {

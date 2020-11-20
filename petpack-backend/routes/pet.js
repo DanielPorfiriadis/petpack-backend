@@ -3,6 +3,7 @@ const express = require('express');
 const Pet = require('../models/pet');
 const router = express.Router();
 var petController = require('../controllers/pet');
+const checkAuth =require("../middleware/check-auth");
 
 //create Pet in database // /owner/:ownerId
 router.post('/add/:ownerUsername',(req, res, next) => {
@@ -26,6 +27,24 @@ router.post('/add/:ownerUsername',(req, res, next) => {
     });
     
 });
+
+router.put('update/:ownerUsername', checkAuth, (req, res, next) => {
+
+    console.log(req.body.ownerUsername);
+    let pet = new Pet({
+        petName: req.body.petName,
+        species: req.body.species,
+        gender: req.body.gender,
+        ownerUsername: req.body.ownerUsername
+    });
+    Pet.updateOne({ownerUsername: req.body.ownerUsername}, pet).then(result => {
+        if (result.nModified>0){
+            res.status(200).json({message: "Update successful", status:'200'});
+        } else {
+            res.status(401).json({message: "Not authorized", status: '401'});
+        }
+    });
+})
 
 router.get('/get/:ownerUsername', (req, res, next) => {
     let fetchedPets

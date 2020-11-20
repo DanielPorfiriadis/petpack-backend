@@ -60,10 +60,10 @@ router.put("/:id", checkAuth,
     multer({storage: storage}).single("image"), 
     (req, res, next) => {
         let imagePath = req.body.imagePath;
-        /*den xreiazete*/if(req.file) {
+        if(req.file) {
             const url = req.protocol + '://' + req.get("host");
             imagePath = url + "/images/" + req.file.filename
-        }/*den xreiazete*/
+        }
         const post = new Post({
             _id: req.body.id,
             title: req.body.title,

@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
+const checkAuth =require("../middleware/check-auth");
 
 const User = require("../models/user");
 
@@ -28,13 +29,14 @@ const storage = multer.diskStorage({
     }
 });
 
+
 router.get("/:id", (req, res, next)=> {
     User.findById(req.params.id).then(user=>{
         if (user) {
             res.status(200).json(user);
-       } else {
-           res.status(404).json({ message: 'User not found'});
-       }
+    } else {
+        res.status(404).json({ message: 'User not found'});
+    }
     });
 });
 
@@ -50,27 +52,71 @@ router.get("", (req, res, next) => {
         res.status(201).json({
             message: 'Users fetched',
             usernameArray: usernameArray
-        });
-    })
-    .catch(err => {
-        res.status(500).json({
-            err: err
-        });
     });
 })
+.catch(err => {
+    res.status(500).json({
+        err: err
+    });
+});
+})
 
+router.put("/update/:id", checkAuth, multer({storage: storage}).single("image"), (req, res, next)=> {
+    let imagePath = req.body.imagePath;
+    let user = new User();
+    if(req.file!=null) {
+        console.log('ok');
+        const url = req.protocol + '://' + req.get("host");
+        imagePath = url + "/images/" + req.file.filename;
+        console.log(imagePath);
+    }
+    console.log(imagePath);
+    if(req.body.password){
+        bcrypt.hash(req.body.password, 10).then(hash => {
+           user = {
+            _id: req.params.id,
+            email: req.body.email,
+            password: hash,
+            imagePath: imagePath,
+            lastName: req.body.lastName,
+            firstName: req.body.firstName,
+            userName: req.body.userName,
+            };
+            User.updateOne({_id: req.params.id}, user).then(result => {
+                if (result.nModified>0){
+                    res.status(200).json({message: "Update successful", status:'200'});
+                } else {
+                    res.status(401).json({message: "Not authorized", status: '401'});
+                }
+            });
+        });
+    }
+    else{
+        user = {
+            _id: req.params.id,
+            email: req.body.email,
+            imagePath: imagePath,
+            lastName: req.body.lastName,
+            firstName: req.body.firstName,
+            userName: req.body.userName,
+            };
+    }
+});
 
 router.post("/signup", multer({storage: storage}).single("image"), (req, res, next) => {
-    const url = req.protocol + '://' + req.get("host");
-    console.log(req.file.filename);
+    let imagePath = req.body.imagePath;
+    if(req.file) {
+        const url = req.protocol + '://' + req.get("host");
+        imagePath = url + "/images/" + req.file.filename
+    }
     bcrypt.hash(req.body.password, 10).then(hash => {
         const user = new User({
             userName: req.body.userName,
-            email: req.body.email,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            imagePath: url + "/images/" + req.file.filename,
-            password: hash
+            email: req.body.email,
+            password: hash,
+            imagePath: imagePath
         });
         user.save().then( result =>{
             res.status(201).json({
