@@ -64,43 +64,93 @@ router.get("", (req, res, next) => {
 router.put("/update/:id", checkAuth, multer({storage: storage}).single("image"), (req, res, next)=> {
     let imagePath = req.body.imagePath;
     let user = new User();
-    if(req.file!=null) {
-        console.log('ok');
+    console.log(req.body);
+    if(req.file) {
         const url = req.protocol + '://' + req.get("host");
         imagePath = url + "/images/" + req.file.filename;
-        console.log(imagePath);
     }
-    console.log(imagePath);
-    if(req.body.password){
+    if(req.body.password!='null'){
         bcrypt.hash(req.body.password, 10).then(hash => {
-           user = {
-            _id: req.params.id,
-            email: req.body.email,
-            password: hash,
-            imagePath: imagePath,
-            lastName: req.body.lastName,
-            firstName: req.body.firstName,
-            userName: req.body.userName,
-            };
-            User.updateOne({_id: req.params.id}, user).then(result => {
-                if (result.nModified>0){
-                    res.status(200).json({message: "Update successful", status:'200'});
-                } else {
-                    res.status(401).json({message: "Not authorized", status: '401'});
-                }
-            });
-        });
+                   user = {
+                    _id: req.params.id,
+                    email: req.body.email,
+                    password: hash,
+                    lastName: req.body.lastName,
+                    firstName: req.body.firstName,
+                    userName: req.body.userName,
+                    };
+                    User.updateOne({_id: req.params.id}, user).then(result => {
+                        if (result.nModified>0){
+                            res.status(200).json({message: "Update successful", status:'200'});
+                        } else {
+                            res.status(401).json({message: "Not authorized", status: '401'});
+                        }
+                    });
+                });
     }
-    else{
+        else{
+        console.log('else');
         user = {
             _id: req.params.id,
             email: req.body.email,
-            imagePath: imagePath,
             lastName: req.body.lastName,
             firstName: req.body.firstName,
             userName: req.body.userName,
+            imagePath: imagePath
             };
+        User.updateOne({_id: req.params.id}, user).then(result => {
+            if (result.nModified>0){
+                res.status(200).json({message: "Update successful", status:'200'});
+            } else {
+                res.status(401).json({message: "Not authorized", status: '401'});
+            }
+        });
     }
+    // if(!req.file) {
+    //     console.log('1o if');
+    //     console.log('ok');
+    //     const url = req.protocol + '://' + req.get("host");
+    //     imagePath = url + "/images/" + req.file.filename;
+    //     user ={imagePath: imagePath};
+    // }
+
+    // if(!req.body.password){
+    //     console.log('2o if');
+    //     bcrypt.hash(req.body.password, 10).then(hash => {
+    //        user = {
+    //         _id: req.params.id,
+    //         email: req.body.email,
+    //         password: hash,
+    //         lastName: req.body.lastName,
+    //         firstName: req.body.firstName,
+    //         userName: req.body.userName,
+    //         };
+    //         User.updateOne({_id: req.params.id}, user).then(result => {
+    //             if (result.nModified>0){
+    //                 res.status(200).json({message: "Update successful", status:'200'});
+    //             } else {
+    //                 res.status(401).json({message: "Not authorized", status: '401'});
+    //             }
+    //         });
+    //     });
+    // }
+    // else{
+    //     console.log('else');
+    //     user = {
+    //         _id: req.params.id,
+    //         email: req.body.email,
+    //         lastName: req.body.lastName,
+    //         firstName: req.body.firstName,
+    //         userName: req.body.userName,
+    //         };
+    //     User.updateOne({_id: req.params.id}, user).then(result => {
+    //         if (result.nModified>0){
+    //             res.status(200).json({message: "Update successful", status:'200'});
+    //         } else {
+    //             res.status(401).json({message: "Not authorized", status: '401'});
+    //         }
+    //     });
+    // }
 });
 
 router.post("/signup", multer({storage: storage}).single("image"), (req, res, next) => {
