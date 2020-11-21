@@ -11,6 +11,7 @@ var reactionDeleted = false;
 
 /*const emojiList = ['like', 'love', 'wow', 'haha', 'sad', 'angry'];*/
 
+
 // Ektelesi Nayas
 // -----------------------------------
 
@@ -30,24 +31,27 @@ router.post("", (req, res, next) => {
    
 });
 
-router.delete("", (req, res, next) => {
+router.delete("/posts/:postId", (req, res, next) => {
     const deletedItems = {
         userId: req.body.userId,
-        postId: req.query.postId,
+        postId: req.params.postId,
         emote: req.body.emote
     };
     Reaction.findOneAndDelete(deletedItems, function (err, fetchedReactions) { console.log(fetchedReactions) });
 
 });
 
-router.get("", (req, res, next) => {
-    const allEmotes = {
-        postId: req.query.postId,
-        emote: req.body.emote
+router.get("/posts/:postId", (req, res, next) => {
+    const specificPost = {
+        postId: req.params.postId
     };
-    Reaction.find(allEmotes, function (err, fetchedReactions) { console.log(fetchedReactions) });
+    Reaction.find(specificPost).count({emote: req.body.emote},function (err, emotes) {
+        console.log(emotes);
+    });                              /*.then(fetchedReactions => { return Reaction.countDocuments(); });*/
+   
+
 }
-    )
+);
 
     
 
