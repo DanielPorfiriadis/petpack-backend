@@ -9,32 +9,34 @@ const { update } = require('../models/reaction');
 var reactionDeleted = false;
 
 
-/*const emojiList = ['like', 'love', 'wow', 'haha', 'sad', 'angry'];*/
+var emojiListCounts = [];
+var emojiList = [];
 
 
 // Ektelesi Nayas
 // -----------------------------------
 
 
-router.post("", (req, res, next) => {
+router.post("/addReaction", (req, res, next) => {
     const query = {
         userId: req.body.userId,
-        postId: req.query.postId
+        postId: req.body.postId
     };
 
     const emote = {
         emote: req.body.emote
     };
-
-
     Reaction.findOneAndUpdate(query, emote, { new: true, upsert: true }, function (err, fetchedReactions) { console.log(fetchedReactions); });
    
 });
 
-router.delete("/posts/:postId", (req, res, next) => {
+
+
+
+router.post("/deleteReaction", (req, res, next) => {
     const deletedItems = {
         userId: req.body.userId,
-        postId: req.params.postId,
+        postId: req.body.postId,
         emote: req.body.emote
     };
     Reaction.findOneAndDelete(deletedItems, function (err, fetchedReactions) { console.log(fetchedReactions) });
@@ -43,17 +45,48 @@ router.delete("/posts/:postId", (req, res, next) => {
 
 router.get("/posts/:postId", (req, res, next) => {
     const specificPost = {
-        postId: req.params.postId
+        postId: req.body.postId
     };
-    Reaction.find(specificPost).count({emote: req.body.emote},function (err, emotes) {
-        console.log(emotes);
-    });                              /*.then(fetchedReactions => { return Reaction.countDocuments(); });*/
-   
-
+    Reaction.find(specificPost).count({ emote: 'like' }, function (err, emotes) {
+        emojiListCounts[0]=emotes;
+        
+    });                             
+    Reaction.find(specificPost).count({ emote: 'love' }, function (err, emotes) {
+        emojiListCounts[1] = emotes;
+        
+    }); Reaction.find(specificPost).count({ emote: 'wow' }, function (err, emotes) {
+        emojiListCounts[2] = emotes;
+    });
+    Reaction.find(specificPost).count({ emote: 'haha' }, function (err, emotes) {
+        emojiListCounts[3] = emotes;
+    });  
+    Reaction.find(specificPost).count({ emote: 'sad' }, function (err, emotes) {
+        emojiListCounts[4] = emotes;
+    });  
+    Reaction.find(specificPost).count({ emote: 'angry' }, function (err, emotes) {
+        emojiListCounts[5] = emotes;
+        console.log(emojiList);
+    });  
+    return emojiList;
 }
 );
 
+router.get("/posts", (req, res, next) => {
+    const specificPost = {
+        postId: req.body.postId
+    };
     
+    Reaction.find(specificPost)
+        .then(documents => {
+            fetchedReactions = documents;
+        }).then(response => {
+            res.status(200).json({
+                message: 'Reactions fetched successfully',
+                emotes: fetchedReactions
+            })
+        })
+
+});
 
 
 module.exports = router;
