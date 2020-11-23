@@ -43,6 +43,7 @@ router.post("", checkAuth, multer({storage: storage}).single("image"), (req, res
         imagePath: imagePathString,
         creator: req.userData.userId,
         creatorUsername: req.userData.userName,
+        postAvatar: req.body.postAvatar
     });
     post.save().then(createdPost =>{
        res.status(201).json({
