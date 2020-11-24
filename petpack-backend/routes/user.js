@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const checkAuth =require("../middleware/check-auth");
-
+const Post = require("../models/post");
 const User = require("../models/user");
 
 const MIME_TYPE_MAP = {
@@ -68,6 +68,11 @@ router.put("/update/:id", checkAuth, multer({storage: storage}).single("image"),
     if(req.file) {
         const url = req.protocol + '://' + req.get("host");
         imagePath = url + "/images/" + req.file.filename;
+        // Post.updateMany({creatorUsername :req.body.userName},
+        //     {
+        //         $set:{postAvatar: imagePath}
+        //     }
+        //     );
     }
     if(req.body.password!='null'){
         bcrypt.hash(req.body.password, 10).then(hash => {

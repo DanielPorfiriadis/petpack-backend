@@ -9,7 +9,8 @@ const { update } = require('../models/reaction');
 var reactionDeleted = false;
 
 
-var emojiListCounts = [];
+//var emojiListCounts = [];
+var emojiListCounts;
 var emojiList = [];
 
 
@@ -45,29 +46,30 @@ router.post("/deleteReaction", (req, res, next) => {
 
 router.get("/posts/:postId", (req, res, next) => {
     const specificPost = {
-        postId: req.body.postId
+        postId: req.params.postId
     };
-    Reaction.find(specificPost).count({ emote: 'like' }, function (err, emotes) {
-        emojiListCounts[0]=emotes;
-        
+    Reaction.find(specificPost).count( function (err, emotes) {
+        //emojiListCounts[0]=emotes;
+        emojiListCounts=emotes;
+        console.log(emojiListCounts);
     });                             
-    Reaction.find(specificPost).count({ emote: 'love' }, function (err, emotes) {
-        emojiListCounts[1] = emotes;
+    // Reaction.find(specificPost).count({ emote: 'love' }, function (err, emotes) {
+    //     emojiListCounts[1] = emotes;
         
-    }); Reaction.find(specificPost).count({ emote: 'wow' }, function (err, emotes) {
-        emojiListCounts[2] = emotes;
-    });
-    Reaction.find(specificPost).count({ emote: 'haha' }, function (err, emotes) {
-        emojiListCounts[3] = emotes;
-    });  
-    Reaction.find(specificPost).count({ emote: 'sad' }, function (err, emotes) {
-        emojiListCounts[4] = emotes;
-    });  
-    Reaction.find(specificPost).count({ emote: 'angry' }, function (err, emotes) {
-        emojiListCounts[5] = emotes;
-        console.log(emojiList);
-    });  
-    return emojiList;
+    // }); Reaction.find(specificPost).count({ emote: 'wow' }, function (err, emotes) {
+    //     emojiListCounts[2] = emotes;
+    // });
+    // Reaction.find(specificPost).count({ emote: 'haha' }, function (err, emotes) {
+    //     emojiListCounts[3] = emotes;
+    // });  
+    // Reaction.find(specificPost).count({ emote: 'sad' }, function (err, emotes) {
+    //     emojiListCounts[4] = emotes;
+    // });  
+    // Reaction.find(specificPost).count({ emote: 'angry' }, function (err, emotes) {
+    //     emojiListCounts[5] = emotes;
+    //     console.log(emojiListCounts);
+    // });  
+    res.status(200).json({emojiListCounts: emojiListCounts});
 }
 );
 
@@ -81,8 +83,8 @@ router.get("/posts", (req, res, next) => {
             fetchedReactions = documents;
         }).then(response => {
             res.status(200).json({
-                message: 'Reactions fetched successfully',
-                emotes: fetchedReactions
+                postId: document.postId,
+                emojiListCounts: emojiListCounts
             })
         })
 
