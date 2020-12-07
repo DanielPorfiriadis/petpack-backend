@@ -10,7 +10,10 @@
 <h3> Locally </h3>
 </hr>
 <p> git clone project </p>
-<p> run npm install express --save </p>
+<p> run "npm install express --save" </p>
 <h3> Server </h3>
-<p> run node server.js </p>
+<p> run "node server.js" </p>
 <p> localhost:3000 </p>
+</br>
+<p> You can login with: </p> 
+<p> Username: testuser	Password: testuser1! </p> 
