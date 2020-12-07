@@ -1,5 +1,7 @@
 <h1> Node.js Express MongoDB </h1>
-Petpack social network, skg.code project
+<p> Petpack social network, skg.code project </p>
+<p> Connect with friends and pets around you on PetPack. </p>
+<p> localhost:3000 </p>
 <h2> Installation </h2>
 </hr>
 <h3>Before you start make sure you have installed:</h3>
