@@ -15,5 +15,6 @@
 <p> run "node server.js" </p>
 <p> localhost:3000 </p>
 </br>
+<h3> Clone petpack-frontend and login or register </h3>
 <p> You can login with: </p> 
 <p> Username: testuser	Password: testuser1! </p> 
